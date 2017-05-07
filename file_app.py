@@ -2,6 +2,7 @@ from file import Commit
 
 d = Commit()
 data = d.read_file("file.txt")
+excel = d.transfer_to_excel(data)
 authors = d.get_authors(data)
 count = d.get_number_of_updated_commits(data)
 count1 = d.get_specific_author(data)
