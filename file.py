@@ -45,4 +45,51 @@ class Commit(object):
 				break
 		return authors 
 		
+	def get_specific_author(self,data):
+		sep = 72*'-'
+		index = 0
+		count = 0
+		while index < len(data):
+			try:
+				index = data.index(sep, index + 1)
+				details = data[index + 1].split('|')
+				author = details[1].strip()
+				if author == "Thomas":
+					count += 1
+			except IndexError:
+				break
+		return count
+    
+	def get_commit_comment(self):
+		return 'svn merge -r' + str(self.revision-1) + ':' + str(self.revision) + ' by ' \
+			+ self.author + ' with the comment ' + ','.join(self.comment) \
+			+ ' and the changes ' + ','.join(self.changes)
+    
+	def get_commits(self,data):
+		commits = []
+		current_commit = None
+		index = 0
+		sep = 72*'-'
+		
+		while True:
+			try:
+				# parse each of the commits and put them into a list of commits
+				current_commit = Commit()
+				details = data[index + 1].split('|')
+				current_commit.revision = int(details[0].strip().strip('r'))
+				current_commit.author = details[1].strip()
+				current_commit.date = details[2].strip()
+				current_commit.comment_line_count = int(details[3].strip().split(' ')[0])
+				current_commit.changes = data[index+2:data.index('',index+1)]
+				#print(current_commit.changes)
+				index = data.index(sep, index + 1)
+				current_commit.comment = data[index-current_commit.comment_line_count:index]
+				commits.append(current_commit)
+			except IndexError:
+				break
+		return commits 
+		
 	
+	
+
+
