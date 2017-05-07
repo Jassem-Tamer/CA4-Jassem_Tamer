@@ -18,7 +18,18 @@ class Commit(object):
 			except:
 				print "File is not existed!!!!"
 				continue
-		
+	def transfer_to_excel(self,excel):
+		data = []
+		with open("file.txt") as f:
+			for line in f:
+				data.append([word for word in line.split(" | ") if word])
+		import xlwt
+		wb = xlwt.Workbook()
+		sheet = wb.add_sheet("New Sheet")
+		for row_index in range(len(data)):
+			for col_index in range(len(data[row_index])):
+				sheet.write(row_index, col_index, data[row_index][col_index])
+		wb.save("newSheet.xls")	
 			
 	def get_number_of_updated_commits(self,data):
 		count = 0
